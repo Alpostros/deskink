@@ -103,18 +103,19 @@ def cmd_selftest(args) -> int:
 
 
 def main(argv=None) -> int:
-    p = argparse.ArgumentParser(prog="deskink", description="Multi-page e-ink desk dashboard")
-    p.add_argument("-c", "--config", help="config file (default: $DESKINK_CONFIG, ./config.toml, "
-                                          "/etc/deskink/config.toml)")
-    p.add_argument("-v", "--verbose", action="store_true")
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("-c", "--config", default=argparse.SUPPRESS,
+                        help="config file (default: $DESKINK_CONFIG, ./config.toml, /etc/deskink/config.toml)")
+    common.add_argument("-v", "--verbose", action="store_true", default=argparse.SUPPRESS)
+    p = argparse.ArgumentParser(prog="deskink", description="Multi-page e-ink desk dashboard", parents=[common])
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    r = sub.add_parser("run", help="rotate pages on the display")
+    r = sub.add_parser("run", parents=[common], help="rotate pages on the display")
     r.add_argument("--display", choices=config_mod.DRIVERS, help="override display.driver")
     r.add_argument("--png", help="PNG path for the png display")
     r.set_defaults(func=cmd_run)
 
-    s = sub.add_parser("render", help="render pages to PNG files and exit")
+    s = sub.add_parser("render", parents=[common], help="render pages to PNG files and exit")
     s.add_argument("--page", help="page title or type (default: all)")
     s.add_argument("--all", action="store_true")
     s.add_argument("--fixtures", action="store_true", help="use bundled sample data instead of fetching")
@@ -123,13 +124,15 @@ def main(argv=None) -> int:
     s.add_argument("--flip", action="store_true", help="apply display.flip like the panel would")
     s.set_defaults(func=cmd_render)
 
-    sub.add_parser("list", help="list page types and configured pages").set_defaults(func=cmd_list)
+    sub.add_parser("list", parents=[common], help="list page types and configured pages").set_defaults(func=cmd_list)
 
-    t = sub.add_parser("selftest", help="check that a panel is attached and answering")
+    t = sub.add_parser("selftest", parents=[common], help="check that a panel is attached and answering")
     t.add_argument("--min-seconds", type=float, default=1.0)
     t.set_defaults(func=cmd_selftest)
 
     args = p.parse_args(argv)
+    args.config = getattr(args, "config", None)
+    args.verbose = getattr(args, "verbose", False)
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
                         format="%(levelname)s %(name)s: %(message)s")
     try:

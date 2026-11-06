@@ -59,3 +59,12 @@ def test_quiet_hours_wrapping_midnight():
     assert q.active(at(1, 0))
     assert not q.active(at(12, 0))
     assert q.seconds_left(at(23, 0)) == 7 * 3600
+
+
+def test_cli_accepts_config_on_either_side(capsys):
+    from deskink.__main__ import main
+
+    example = str(ROOT / "config.example.toml")
+    assert main(["-c", example, "list"]) == 0
+    assert main(["list", "-c", example]) == 0
+    assert capsys.readouterr().out.count("Delft") == 2
