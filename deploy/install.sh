@@ -33,6 +33,7 @@ done
 
 step user and config
 id -u deskink >/dev/null 2>&1 || useradd -r -s /usr/sbin/nologin -d /var/lib/deskink deskink
+usermod -aG spi,gpio deskink
 install -d -m 755 "$ETC"
 if [ ! -f "$ETC/config.toml" ]; then
     install -m 640 -g deskink "$APP/config.example.toml" "$ETC/config.toml"

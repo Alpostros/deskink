@@ -13,7 +13,7 @@ Environment=DESKINK_DRIVER_DIR=@APP@/vendor
 Environment=PYTHONUNBUFFERED=1
 StateDirectory=deskink
 WorkingDirectory=/var/lib/deskink
-ExecStart=/usr/bin/python3 -m deskink run -c /etc/deskink/config.toml
+ExecStart=/usr/bin/python3 -m deskink -c /etc/deskink/config.toml run
 Restart=on-failure
 RestartSec=30
 TimeoutStopSec=30
