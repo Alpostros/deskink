@@ -1,0 +1,66 @@
+# Copy to /etc/deskink/config.toml on the Pi (or ./config.toml for local runs) and edit.
+# Secrets never go in this file: the NS API key is read from the environment (NS_API_KEY),
+# which the systemd unit loads from /etc/deskink/deskink.env.
+
+default_duration = 30
+
+[display]
+driver = "waveshare"        # "waveshare" (the panel) or "png" (writes png_path, for development)
+flip = false                # rotate 180 degrees
+full_refresh_every = 20     # page switches between full (flashing) refreshes
+png_path = "screen.png"
+
+[quiet_hours]
+start = "00:30"
+end = "07:00"
+show = "blank"              # "blank", or the title/type of a page to freeze on
+
+[[pages]]
+type = "trains"
+title = "Delft"
+station = "DT"
+rows = 4
+min_minutes = 4
+# only_destinations = ["Den Haag Centraal", "Rotterdam Centraal"]
+# exclude_destinations = []
+
+[[pages]]
+type = "weather"
+title = "Weather"
+latitude = 52.0116
+longitude = 4.3571
+
+[[pages]]
+type = "homelab"
+title = "Homelab"
+# prometheus = "http://192.0.2.10:9090"
+
+  [[pages.checks]]
+  name = "router"
+  url = "https://192.0.2.1/"
+  insecure = true
+
+  [[pages.checks]]
+  name = "dns"
+  tcp = "192.0.2.2:53"
+
+  [[pages.checks]]
+  name = "nas"
+  url = "http://192.0.2.3/"
+
+  [[pages.checks]]
+  name = "grafana"
+  url = "http://192.0.2.10:3000/api/health"
+
+  [[pages.checks]]
+  name = "immich"
+  url = "http://192.0.2.11:2283/api/server/ping"
+  contains = "pong"
+
+  [[pages.checks]]
+  name = "radarr"
+  url = "http://192.0.2.12:7878/ping"
+
+  # [[pages.checks]]
+  # name = "hypervisor"
+  # prom = 'up{job="proxmox-host"}'

@@ -1,0 +1,81 @@
+{
+  "payload": {
+    "source": "PPV",
+    "departures": [
+      {
+        "direction": "Rotterdam Centraal",
+        "name": "NS  2150",
+        "plannedDateTime": "2026-11-06T14:32:00+0100",
+        "actualDateTime": "2026-11-06T14:32:00+0100",
+        "plannedTrack": "2",
+        "actualTrack": "2",
+        "product": {"number": "2150", "categoryCode": "IC", "shortCategoryName": "NS Intercity", "operatorName": "NS"},
+        "trainCategory": "IC",
+        "cancelled": false,
+        "messages": [],
+        "departureStatus": "INCOMING"
+      },
+      {
+        "direction": "Den Haag Centraal",
+        "name": "NS  2145",
+        "plannedDateTime": "2026-11-06T14:36:00+0100",
+        "actualDateTime": "2026-11-06T14:38:00+0100",
+        "plannedTrack": "1",
+        "actualTrack": "1",
+        "product": {"number": "2145", "categoryCode": "IC", "shortCategoryName": "NS Intercity", "operatorName": "NS"},
+        "trainCategory": "IC",
+        "cancelled": false,
+        "messages": [],
+        "departureStatus": "INCOMING"
+      },
+      {
+        "direction": "Rotterdam Centraal",
+        "name": "NS  5145",
+        "plannedDateTime": "2026-11-06T14:39:00+0100",
+        "actualDateTime": "2026-11-06T14:39:00+0100",
+        "plannedTrack": "2",
+        "actualTrack": "3",
+        "product": {"number": "5145", "categoryCode": "SPR", "shortCategoryName": "NS Sprinter", "operatorName": "NS"},
+        "trainCategory": "SPR",
+        "cancelled": false,
+        "messages": [],
+        "departureStatus": "INCOMING"
+      },
+      {
+        "direction": "Amsterdam Centraal",
+        "name": "NS  2246",
+        "plannedDateTime": "2026-11-06T14:44:00+0100",
+        "actualDateTime": "2026-11-06T14:44:00+0100",
+        "plannedTrack": "1",
+        "product": {"number": "2246", "categoryCode": "IC", "shortCategoryName": "NS Intercity", "operatorName": "NS"},
+        "trainCategory": "IC",
+        "cancelled": false,
+        "messages": [],
+        "departureStatus": "ON_STATION"
+      },
+      {
+        "direction": "Leiden Centraal",
+        "name": "NS  5146",
+        "plannedDateTime": "2026-11-06T14:47:00+0100",
+        "plannedTrack": "1",
+        "product": {"number": "5146", "categoryCode": "SPR", "shortCategoryName": "NS Sprinter", "operatorName": "NS"},
+        "trainCategory": "SPR",
+        "cancelled": true,
+        "messages": [{"message": "Rijdt niet", "style": "WARNING"}],
+        "departureStatus": "INCOMING"
+      },
+      {
+        "direction": "Schiphol Airport",
+        "name": "NS  2152",
+        "plannedDateTime": "2026-11-06T14:51:00+0100",
+        "actualDateTime": "2026-11-06T14:51:00+0100",
+        "plannedTrack": "1",
+        "product": {"number": "2152", "categoryCode": "IC", "shortCategoryName": "NS Intercity", "operatorName": "NS"},
+        "trainCategory": "IC",
+        "cancelled": false,
+        "messages": [],
+        "departureStatus": "INCOMING"
+      }
+    ]
+  }
+}

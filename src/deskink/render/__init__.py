@@ -1,0 +1,3 @@
+W, H = 250, 122
+HEADER_H = 17
+BLACK, WHITE = 0, 255
