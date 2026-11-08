@@ -1,0 +1,67 @@
+{
+  "formatVersion": "0.0.12",
+  "routes": [
+    {
+      "summary": {
+        "lengthInMeters": 16840,
+        "travelTimeInSeconds": 1380,
+        "trafficDelayInSeconds": 420,
+        "trafficLengthInMeters": 3900,
+        "departureTime": "2026-11-09T08:12:00+01:00",
+        "arrivalTime": "2026-11-09T08:35:00+01:00",
+        "noTrafficTravelTimeInSeconds": 960,
+        "historicTrafficTravelTimeInSeconds": 1140,
+        "liveTrafficIncidentsTravelTimeInSeconds": 1380
+      },
+      "legs": [{"summary": {"lengthInMeters": 16840, "travelTimeInSeconds": 1380}}],
+      "sections": [
+        {"startPointIndex": 0, "endPointIndex": 210, "sectionType": "TRAVEL_MODE", "travelMode": "car"},
+        {"startPointIndex": 88, "endPointIndex": 131, "sectionType": "TRAFFIC", "simpleCategory": "JAM",
+         "effectiveSpeedInKmh": 23, "delayInSeconds": 312, "magnitudeOfDelay": 2,
+         "tec": {"effectCode": 4, "causes": [{"mainCauseCode": 1}]}},
+        {"startPointIndex": 150, "endPointIndex": 162, "sectionType": "TRAFFIC", "simpleCategory": "ROAD_WORK",
+         "effectiveSpeedInKmh": 41, "delayInSeconds": 108, "magnitudeOfDelay": 1,
+         "tec": {"effectCode": 4, "causes": [{"mainCauseCode": 9}]}},
+        {"startPointIndex": 170, "endPointIndex": 172, "sectionType": "TRAFFIC", "simpleCategory": "OTHER",
+         "effectiveSpeedInKmh": 48, "delayInSeconds": 14, "magnitudeOfDelay": 0}
+      ],
+      "guidance": {
+        "instructions": [
+          {"routeOffsetInMeters": 0, "travelTimeInSeconds": 0, "pointIndex": 0, "instructionType": "LOCATION_DEPARTURE", "maneuver": "DEPART"},
+          {"routeOffsetInMeters": 1900, "travelTimeInSeconds": 240, "pointIndex": 31, "instructionType": "TURN", "roadNumbers": ["N470"], "maneuver": "TURN_RIGHT"},
+          {"routeOffsetInMeters": 4100, "travelTimeInSeconds": 420, "pointIndex": 62, "instructionType": "TURN", "roadNumbers": ["A13", "E19"], "maneuver": "MOTORWAY_ENTER_RIGHT"},
+          {"routeOffsetInMeters": 12300, "travelTimeInSeconds": 1080, "pointIndex": 141, "instructionType": "TURN", "roadNumbers": ["A20"], "maneuver": "KEEP_LEFT"},
+          {"routeOffsetInMeters": 14900, "travelTimeInSeconds": 1230, "pointIndex": 158, "instructionType": "TURN", "maneuver": "MOTORWAY_EXIT_RIGHT"},
+          {"routeOffsetInMeters": 16840, "travelTimeInSeconds": 1380, "pointIndex": 210, "instructionType": "LOCATION_ARRIVAL", "maneuver": "ARRIVE"}
+        ]
+      }
+    },
+    {
+      "summary": {
+        "lengthInMeters": 22410,
+        "travelTimeInSeconds": 1560,
+        "trafficDelayInSeconds": 120,
+        "trafficLengthInMeters": 900,
+        "departureTime": "2026-11-09T08:12:00+01:00",
+        "arrivalTime": "2026-11-09T08:38:00+01:00",
+        "noTrafficTravelTimeInSeconds": 1440,
+        "historicTrafficTravelTimeInSeconds": 1500,
+        "liveTrafficIncidentsTravelTimeInSeconds": 1560
+      },
+      "legs": [{"summary": {"lengthInMeters": 22410, "travelTimeInSeconds": 1560}}],
+      "sections": [
+        {"startPointIndex": 0, "endPointIndex": 260, "sectionType": "TRAVEL_MODE", "travelMode": "car"},
+        {"startPointIndex": 120, "endPointIndex": 133, "sectionType": "TRAFFIC", "simpleCategory": "ROAD_WORK",
+         "effectiveSpeedInKmh": 52, "delayInSeconds": 120, "magnitudeOfDelay": 1}
+      ],
+      "guidance": {
+        "instructions": [
+          {"routeOffsetInMeters": 0, "travelTimeInSeconds": 0, "pointIndex": 0, "instructionType": "LOCATION_DEPARTURE", "maneuver": "DEPART"},
+          {"routeOffsetInMeters": 2600, "travelTimeInSeconds": 300, "pointIndex": 40, "instructionType": "TURN", "roadNumbers": ["A4", "E19"], "maneuver": "MOTORWAY_ENTER_LEFT"},
+          {"routeOffsetInMeters": 17800, "travelTimeInSeconds": 1200, "pointIndex": 201, "instructionType": "TURN", "roadNumbers": ["A20"], "maneuver": "KEEP_RIGHT"},
+          {"routeOffsetInMeters": 22410, "travelTimeInSeconds": 1560, "pointIndex": 260, "instructionType": "LOCATION_ARRIVAL", "maneuver": "ARRIVE"}
+        ]
+      }
+    }
+  ]
+}
