@@ -31,6 +31,15 @@ latitude = 52.0116
 longitude = 4.3571
 
 [[pages]]
+type = "commute"
+title = "Work"
+origin = [52.0067, 4.3556]          # lat, lon; your real home/work go only in the private config
+destination = [51.9244, 4.4690]
+alternatives = 1                    # 0-2 alternative routes
+alert_delay_min = 10                # invert the travel time when the delay reaches this
+# refresh_every = 300               # seconds; 300 keeps you near 6,000 of TomTom's 20,000 free calls a month
+
+[[pages]]
 type = "homelab"
 title = "Homelab"
 # prometheus = "http://192.0.2.10:9090"

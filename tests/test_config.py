@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_example_config_loads():
     cfg = config.load(ROOT / "config.example.toml")
-    assert [p.type for p in cfg.pages] == ["trains", "weather", "homelab"]
+    assert [p.type for p in cfg.pages] == ["trains", "weather", "commute", "homelab"]
     assert all(p.duration == 30 for p in cfg.pages)
     assert cfg.quiet_hours.show == "blank"
 

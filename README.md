@@ -4,9 +4,11 @@ A multi-page e-ink dashboard for under a monitor: a **Raspberry Pi Zero 2 W** an
 e-Paper HAT V4** (250×122, black/white). It rotates through pages, each shown for its own duration
 (30 s by default), and sleeps during quiet hours.
 
-| Trains | Weather | Homelab |
-|---|---|---|
-| ![Trains](docs/1-trains.png) | ![Weather](docs/2-weather.png) | ![Homelab](docs/3-homelab.png) |
+| Trains | Weather |
+|---|---|
+| ![Trains](docs/1-trains.png) | ![Weather](docs/2-weather.png) |
+| **Commute** | **Homelab** |
+| ![Commute](docs/3-commute.png) | ![Homelab](docs/4-homelab.png) |
 
 *Rendered from the bundled sample data with `deskink render --all --fixtures`.*
 
@@ -14,6 +16,9 @@ e-Paper HAT V4** (250×122, black/white). It rotates through pages, each shown f
   and the track. A changed track is inverted and a cancelled train is struck through.
 - **Weather:** the current conditions plus the next three hours, from Open-Meteo (no API key). The bottom
   strip is the rain forecast in 15-minute bars.
+- **Commute:** live car travel time to work from TomTom. Shows the delay against free-flow traffic, the
+  arrival time, the jams and road works on the route with their delay, and optionally an alternative
+  route. Past `alert_delay_min` the travel time turns inverted.
 - **Homelab:** up to 18 health checks (HTTP, TCP or a Prometheus query) as tiles. A service that is
   **down** turns into a black tile, and one that hasn't answered yet shows dotted with a `?`.
 
@@ -54,9 +59,12 @@ sudoedit /etc/deskink/deskink.env
 sudo systemctl restart deskink
 ```
 
-`deskink.env` holds one line, `NS_API_KEY=<key>`. Get the key free at
-[apiportal.ns.nl](https://apiportal.ns.nl/) (product *Ns-App*, which includes the travel-information
-API). The file is mode 600 and only systemd reads it.
+`deskink.env` holds one `NAME=value` line per API key. The file is mode 600 and only systemd reads it.
+
+| Key | For | Where |
+|---|---|---|
+| `NS_API_KEY` | trains | Free at [apiportal.ns.nl](https://apiportal.ns.nl/): subscribe to the *Ns-App* product, which includes the travel-information API |
+| `TOMTOM_API_KEY` | commute | Free at [developer.tomtom.com](https://developer.tomtom.com/), no credit card. The free tier is 20,000 route calculations a month; with `refresh_every = 300` the page uses about 6,000 |
 
 **Update** with `sudo /opt/deskink/deploy/update.sh`, which does a `git pull` plus a restart.
 **Logs:** `journalctl -u deskink -f`.
@@ -88,6 +96,7 @@ station = "DT"
 | `trains` | `station` (required, NS station code), `rows` (4), `min_minutes` (0; hides trains you can't catch), `only_destinations`, `exclude_destinations`, `abbreviate` (true), `api_key_env` (`NS_API_KEY`) |
 | `weather` | `latitude`, `longitude`, `timezone` (`Europe/Amsterdam`), `rain_full_scale` (2.0 mm per 15 min for a full bar) |
 | `homelab` | `checks` (required, up to 18), `prometheus` (base URL, for `prom` checks), `timeout` (3 s), `fail_threshold` (2) |
+| `commute` | `origin`, `destination` (required, `[lat, lon]`), `alternatives` (1; 0–2), `alert_delay_min` (10), `travel_mode` (`car`), `api_key_env` (`TOMTOM_API_KEY`). `refresh_every` defaults to 300 and can't go below 60 |
 | `clock` | none; a demo page |
 
 Every page also takes `title`, `duration`, `refresh_every` and `enabled`. The same type can appear
@@ -128,7 +137,13 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 .venv/bin/pytest -q && .venv/bin/ruff check .
 ```
 
-`render` without `--fixtures` fetches live data. Put the real config in `./config.toml`; it's gitignored.
+`render` without `--fixtures` fetches live data. Put the real config in `./config.toml` and the API keys in
+`./.env`; both are gitignored. Load the keys without printing them:
+`set -a && . ./.env && set +a && .venv/bin/deskink render --all`.
+
+Home and work coordinates belong only in the private config. TomTom's raw response contains the full
+route geometry, so a recorded commute fixture goes through `deskink.pages.commute.scrub()` before it's
+committed. The bundled one is synthetic and has no coordinates at all.
 
 ## Adding a page
 
@@ -170,7 +185,9 @@ Then add `[[pages]] type = "quote"` to the config. What each method does:
   - A real panel takes about 2 s for a full refresh.
   - If it reports a few hundred ms, the panel isn't answering; the driver never notices that. Check the
     flex-cable latch, the HAT seating (pin 1 over pin 1) and the header solder joints.
-- **Trains says `$NS_API_KEY is not set`:** fill in `/etc/deskink/deskink.env` and restart.
+- **Trains or commute says `$NS_API_KEY` / `$TOMTOM_API_KEY is not set`:** add it to
+  `/etc/deskink/deskink.env` and restart.
+- **Commute says `HTTP Error 403`:** the TomTom key is wrong, or the free tier is used up for the month.
 - **A homelab tile shows `?`:** it hasn't answered since start-up yet, or (for a `prom` check)
   Prometheus is unreachable.
 
@@ -180,6 +197,6 @@ Then add `[[pages]] type = "quote"` to the config. What each method does:
 - The Waveshare driver comes from [waveshareteam/e-Paper](https://github.com/waveshareteam/e-Paper) at
   install time.
 - Weather data by [Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0). Train data from the
-  [NS API](https://apiportal.ns.nl/).
+  [NS API](https://apiportal.ns.nl/). Traffic and routing by [TomTom](https://developer.tomtom.com/).
 
 MIT license.

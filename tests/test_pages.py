@@ -21,6 +21,7 @@ SPECS = [
     PageSpec("trains", 30, {"station": "DT"}),
     PageSpec("weather", 30),
     PageSpec("homelab", 30, {"checks": CHECKS}),
+    PageSpec("commute", 30, {"origin": [52.0, 4.36], "destination": [51.92, 4.47]}),
 ]
 
 
