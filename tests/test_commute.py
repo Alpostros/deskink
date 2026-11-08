@@ -16,7 +16,7 @@ def page(**extra):
 
 def test_parse_fixture():
     d = parse(fixture("commute.json"))
-    assert (d["minutes"], d["delay"], d["normal"], d["arrive"], d["via"]) == (23, 7, 16, "08:35", "A13")
+    assert (d["minutes"], d["delay"], d["free"], d["usual"], d["arrive"], d["via"]) == (23, 7, 16, 19, "08:35", "A13")
     assert [(i["kind"], i["road"], i["delay"]) for i in d["incidents"]] == [("JAM", "A13", 5), ("WORKS", "A20", 2)]
     alt = d["alternative"]
     assert (alt["minutes"], alt["via"], alt["delay"]) == (26, "A4", 2)
@@ -79,3 +79,28 @@ def test_status_only_when_delayed():
     d = p.sample()
     assert p.status(d) == "+7 min"
     assert p.status(dict(d, delay=0)) is None
+
+
+def test_delay_is_against_empty_roads_not_incidents():
+    raw = copy.deepcopy(fixture("commute.json"))
+    s = raw["routes"][0]["summary"]
+    s.update(travelTimeInSeconds=1598, trafficDelayInSeconds=0, noTrafficTravelTimeInSeconds=1345,
+             historicTrafficTravelTimeInSeconds=1641)
+    d = parse(raw)
+    assert (d["minutes"], d["delay"], d["free"], d["usual"]) == (27, 5, 22, 27)
+    del s["historicTrafficTravelTimeInSeconds"], s["noTrafficTravelTimeInSeconds"]
+    d = parse(raw)
+    assert d["usual"] is None and d["free"] == 27 and d["delay"] == 0
+
+
+def test_alert_compares_with_usual(monkeypatch):
+    from datetime import datetime
+
+    from deskink.cache import Entry
+    from deskink.frame import compose
+
+    p = page(alert_delay_min=5)
+    base = p.sample()
+    as_usual = compose(p, Entry(dict(base, minutes=19, usual=19), 1.0), datetime(2026, 11, 9, 8, 0))
+    worse = compose(p, Entry(dict(base, minutes=25, usual=19), 1.0), datetime(2026, 11, 9, 8, 0))
+    assert worse.histogram()[0] > as_usual.histogram()[0] + 1000

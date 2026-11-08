@@ -52,8 +52,8 @@ def parse_route(route: dict) -> dict:
     s = route["summary"]
     instructions = route.get("guidance", {}).get("instructions", [])
     travel = s["travelTimeInSeconds"]
-    delay = s.get("trafficDelayInSeconds", 0)
-    normal = s.get("noTrafficTravelTimeInSeconds", travel - delay)
+    free = s.get("noTrafficTravelTimeInSeconds", travel - s.get("trafficDelayInSeconds", 0))
+    usual = s.get("historicTrafficTravelTimeInSeconds")
     incidents = []
     for sec in route.get("sections", []):
         if sec.get("sectionType") != "TRAFFIC":
@@ -70,8 +70,9 @@ def parse_route(route: dict) -> dict:
     arrival = s.get("arrivalTime")
     return {
         "minutes": _minutes(travel),
-        "delay": _minutes(delay),
-        "normal": _minutes(normal),
+        "delay": max(0, _minutes(travel) - _minutes(free)),
+        "free": _minutes(free),
+        "usual": _minutes(usual) if usual else None,
         "arrive": datetime.fromisoformat(arrival).strftime("%H:%M") if arrival else "",
         "km": round(s.get("lengthInMeters", 0) / 1000, 1),
         "via": _main_road(instructions, s.get("lengthInMeters", 0)),
@@ -144,7 +145,8 @@ class CommutePage(Page):
         big, unit = font(34, True), font(14, True)
         num = str(data["minutes"])
         box_w = width(d, num, big) + width(d, " min", unit) + 10
-        alert = data["delay"] >= self.alert
+        baseline = data["usual"] if data.get("usual") is not None else data["free"]
+        alert = data["minutes"] - baseline >= self.alert
         fg = WHITE if alert else BLACK
         if alert:
             d.rectangle((x0 + 1, y0 + 2, x0 + box_w, y0 + 44), fill=BLACK)
@@ -153,12 +155,13 @@ class CommutePage(Page):
 
         rx = x0 + max(box_w + 10, 112)
         small = font(11)
-        delay = f"+{data['delay']} min delay" if data["delay"] >= 1 else "no delay"
+        delay = f"+{data['delay']} min traffic" if data["delay"] >= 1 else "no traffic"
         d.text((rx, y0 + 15), delay, font=font(13, True), fill=BLACK, anchor="ls")
         d.text((rx, y0 + 29), f"arrive {data['arrive']}" if data["arrive"] else "", font=small, fill=BLACK,
                anchor="ls")
         via = f"via {data['via']} · " if data["via"] else ""
-        d.text((rx, y0 + 43), f"{via}normal {data['normal']} min", font=small, fill=BLACK, anchor="ls")
+        usual = f"usual {data['usual']} min" if data.get("usual") is not None else f"empty {data['free']} min"
+        d.text((rx, y0 + 43), f"{via}{usual}", font=small, fill=BLACK, anchor="ls")
         d.line((x0 + 2, y0 + 50, c.right - 2, y0 + 50), fill=BLACK)
 
         rows = []

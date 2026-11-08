@@ -16,9 +16,10 @@ e-Paper HAT V4** (250×122, black/white). It rotates through pages, each shown f
   and the track. A changed track is inverted and a cancelled train is struck through.
 - **Weather:** the current conditions plus the next three hours, from Open-Meteo (no API key). The bottom
   strip is the rain forecast in 15-minute bars.
-- **Commute:** live car travel time to work from TomTom. Shows the delay against free-flow traffic, the
-  arrival time, the jams and road works on the route with their delay, and optionally an alternative
-  route. Past `alert_delay_min` the travel time turns inverted.
+- **Commute:** live car travel time to work from TomTom. Shows the minutes lost to traffic (against empty
+  roads), the usual time for this hour, the arrival time, the jams and road works on the route with their
+  delay, and optionally an alternative route. The travel time turns inverted once it is
+  `alert_delay_min` worse than usual, so ordinary rush hour doesn't trigger it.
 - **Homelab:** up to 18 health checks (HTTP, TCP or a Prometheus query) as tiles. A service that is
   **down** turns into a black tile, and one that hasn't answered yet shows dotted with a `?`.
 
